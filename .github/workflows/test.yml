@@ -15,13 +15,13 @@ jobs:
               run: |
                   pip install poetry
                   make install
+                  pip install pytest-cov
             - name: Running linter.
               run: make lint
             - name: Doing tests.
               run: make test
             - name: Test & publish code coverage
-              uses:
-                paambaati/codeclimate-action@v5.0.0
+              uses: paambaati/codeclimate-action@v5.0.0
               if: github.ref_name == 'main'
               env:
                 CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
