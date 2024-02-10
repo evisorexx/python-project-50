@@ -1,6 +1,5 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/evisorexx/python-project-50/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/evisorexx/python-project-50/actions)
-<<<<<<< HEAD
 ### Own tests and linter status:
 [![pytest](https://github.com/evisorexx/python-project-50/actions/workflows/test.yml/badge.svg)]
 ### CodeClimate Maintainability Badge:
@@ -10,4 +9,3 @@
 =======
 ### JSON plain files differences:
 [![asciicast](https://asciinema.org/a/IOqyg3rhsTxaWlGkivrvGbyo3.svg)](https://asciinema.org/a/IOqyg3rhsTxaWlGkivrvGbyo3)
->>>>>>> refs/remotes/origin/main
