@@ -15,3 +15,6 @@ lint:
 
 force:
 	pip install --user --force-reinstall dist/*.whl
+
+test:
+	poetry run pytest
