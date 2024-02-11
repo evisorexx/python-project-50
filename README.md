@@ -9,3 +9,6 @@
 =======
 ### JSON plain files differences:
 [![asciicast](https://asciinema.org/a/IOqyg3rhsTxaWlGkivrvGbyo3.svg)](https://asciinema.org/a/IOqyg3rhsTxaWlGkivrvGbyo3)
+=======
+### YAML plain files differences:
+[![asciicast](https://asciinema.org/a/pWApSFKZdE8WqMeLseT8Y6Ot4.svg)](https://asciinema.org/a/pWApSFKZdE8WqMeLseT8Y6Ot4)
