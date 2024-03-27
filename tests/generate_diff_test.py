@@ -1,10 +1,30 @@
 from gendiff.generate_diff import generate_diff
+from gendiff.opener import format_opening
+from gendiff.stylish import formatter
 import pytest
+
+PLAIN_TESTS = [
+    'This is list of plain test dicts.',
+    format_opening('./tests/fixtures/test1.json'), #1 JSON
+    format_opening('./tests/fixtures/test2.json'), #2 JSON
+    format_opening('./tests/fixtures/test1.yml'),  #3 YAML
+    format_opening('./tests/fixtures/test2.yml'),  #4 YAML
+    format_opening('./tests/fixtures/empty.json'), #5 JSON EMPTY
+    format_opening('./tests/fixtures/empty.yml'),  #6 YAML EMPTY
+]
+
+NESTED_TESTS = [
+    'This is list of nested test dicts.',
+    format_opening('./tests/fixtures/nested1.json'), #1 JSON
+    format_opening('./tests/fixtures/nested2.json'), #2 JSON
+    format_opening('./tests/fixtures/nested1.yml'),  #3 YAML
+    format_opening('./tests/fixtures/nested2.yml'),  #4 YAML
+]
 
 
 def test_diff_json():
-    result = generate_diff('./tests/fixtures/test1.json',
-                           './tests/fixtures/test2.json')
+    result = formatter(
+        generate_diff(PLAIN_TESTS[1], PLAIN_TESTS[2]))
     assert result == '''{
   - follow: false
     host: hexlet.io
@@ -16,8 +36,8 @@ def test_diff_json():
 
 
 def test_diff_yml():
-    result = generate_diff('./tests/fixtures/test1.yml',
-                           './tests/fixtures/test2.yml')
+    result = formatter(
+        generate_diff(PLAIN_TESTS[3], PLAIN_TESTS[4]))
     assert result == '''{
   - follow: false
     host: hexlet.io
@@ -29,8 +49,8 @@ def test_diff_yml():
 
 
 def test_diff_nested_json():
-    result = generate_diff('./tests/fixtures/nested1.json',
-                           './tests/fixtures/nested2.json')
+    result = formatter(
+        generate_diff(NESTED_TESTS[1], NESTED_TESTS[2]))
     assert result == '''{
     common: {
       + follow: false
@@ -74,13 +94,12 @@ def test_diff_nested_json():
         }
         fee: 100500
     }
-}
-'''
+}'''
 
 
 def test_diff_nested_yml():
-    result = generate_diff('./tests/fixtures/nested1.yml',
-                           './tests/fixtures/nested2.yml')
+    result = formatter(
+        generate_diff(NESTED_TESTS[3], NESTED_TESTS[4]))
     assert result == '''{
     common: {
       + follow: false
@@ -124,15 +143,14 @@ def test_diff_nested_yml():
         }
         fee: 100500
     }
-}
-'''
+}'''
 
 
 def test_with_empty_file():
-    result_json = generate_diff('./tests/fixtures/test1.json',
-                           './tests/fixtures/empty.json')
-    result_yml = generate_diff('./tests/fixtures/empty.yml',
-                           './tests/fixtures/test2.yml')
+    result_json = formatter(
+        generate_diff(PLAIN_TESTS[1], PLAIN_TESTS[5]))
+    result_yml = formatter(
+        generate_diff(PLAIN_TESTS[6], PLAIN_TESTS[2]))
     assert result_json == '''{
   - follow: false
   - host: hexlet.io
@@ -148,10 +166,10 @@ def test_with_empty_file():
 
 
 def test_identical_files():
-    result_json = generate_diff('./tests/fixtures/test1.json',
-                           './tests/fixtures/test1.json')
-    result_yml = generate_diff('./tests/fixtures/test1.yml',
-                           './tests/fixtures/test1.yml')
+    result_json = formatter(
+        generate_diff(PLAIN_TESTS[1], PLAIN_TESTS[1]))
+    result_yml = formatter(
+        generate_diff(PLAIN_TESTS[3], PLAIN_TESTS[3]))
     assert result_json == '''{
     follow: false
     host: hexlet.io
@@ -169,11 +187,7 @@ def test_identical_files():
 
 def test_format():
     with pytest.raises(SystemExit) as ex:
-        generate_diff('./err.txt',
-                      './tests/fixtures/test1.json')
+        format_opening('./err.txt')
     assert ex.type == SystemExit
-    
-    with pytest.raises(SystemExit) as ex:
-        generate_diff('./tests/fixtures/test1.yml',
-                      './err.rar')
-    assert ex.type == SystemExit
+
+print(PLAIN_TESTS[1])
