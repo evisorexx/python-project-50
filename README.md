@@ -12,3 +12,6 @@
 =======
 ### YAML plain files differences:
 [![asciicast](https://asciinema.org/a/pWApSFKZdE8WqMeLseT8Y6Ot4.svg)](https://asciinema.org/a/pWApSFKZdE8WqMeLseT8Y6Ot4)
+=======
+### Files with nested structures differences:
+[![asciicast](https://asciinema.org/a/HKYsw7FTr5i2zLzCIoMnawei9.svg)](https://asciinema.org/a/HKYsw7FTr5i2zLzCIoMnawei9)
