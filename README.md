@@ -15,3 +15,6 @@
 =======
 ### Files with nested structures differences:
 [![asciicast](https://asciinema.org/a/HKYsw7FTr5i2zLzCIoMnawei9.svg)](https://asciinema.org/a/HKYsw7FTr5i2zLzCIoMnawei9)
+=======
+### Demonstration of plain formatter:
+[![asciicast](https://asciinema.org/a/RLSS8cztqhacqxf2YABvf3Ydg.svg)](https://asciinema.org/a/RLSS8cztqhacqxf2YABvf3Ydg)
