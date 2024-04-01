@@ -2,7 +2,7 @@
 ADD, DEL, DEF = '  + ', '  - ', '    '
 
 
-def values_format(key, value, depth):
+def to_str(key, value, depth):
     if value is None:
         return f'{key}: null'
     elif type(value) is bool:
@@ -11,7 +11,7 @@ def values_format(key, value, depth):
         lines = [f'{key}: {{']
         for item in value.items():
             lines.append(
-                DEF * (depth + 1) + values_format(
+                DEF * (depth + 1) + to_str(
                     item[0], item[1], depth + 1))
         lines.append((DEF * (depth)) + '}')
         return '\n'.join(lines)
@@ -19,7 +19,7 @@ def values_format(key, value, depth):
         return f'{key}: {str(value)}'
 
 
-def formatter(diff):
+def standard_formatter(diff):
     def making_indents(current_diff, depth=1):
         lines = []
         for diff_unit in current_diff:
@@ -27,30 +27,30 @@ def formatter(diff):
             match status:
                 case 'added':
                     lines.append(
-                        (DEF * (depth - 1) + ADD) + values_format(
+                        (DEF * (depth - 1) + ADD) + to_str(
                             diff_unit['name'], diff_unit['what_added'],
                             depth
                         ))
                 case 'deleted':
                     lines.append(
-                        (DEF * (depth - 1) + DEL) + values_format(
+                        (DEF * (depth - 1) + DEL) + to_str(
                             diff_unit['name'], diff_unit['what_deleted'],
                             depth
                         ))
                 case 'unchanged':
                     lines.append(
-                        (DEF * depth) + values_format(
+                        (DEF * depth) + to_str(
                             diff_unit['name'], diff_unit['intact'],
                             depth
                         ))
                 case 'changed':
                     lines.append(
-                        (DEF * (depth - 1) + DEL) + values_format(
+                        (DEF * (depth - 1) + DEL) + to_str(
                             diff_unit['name'], diff_unit['from_first_dict'],
                             depth
                         ))
                     lines.append(
-                        (DEF * (depth - 1) + ADD) + values_format(
+                        (DEF * (depth - 1) + ADD) + to_str(
                             diff_unit['name'], diff_unit['from_second_dict'],
                             depth
                         ))

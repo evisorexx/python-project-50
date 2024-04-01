@@ -1,6 +1,7 @@
 from gendiff.generate_diff import generate_diff
 from gendiff.opener import format_opening
-from gendiff.stylish import formatter
+from gendiff.formatters.stylish import standard_formatter
+from gendiff.formatters.plain import plain_formatter
 import pytest
 
 PLAIN_TESTS = [
@@ -23,7 +24,7 @@ NESTED_TESTS = [
 
 
 def test_diff_json():
-    result = formatter(
+    result = standard_formatter(
         generate_diff(PLAIN_TESTS[1], PLAIN_TESTS[2]))
     assert result == '''{
   - follow: false
@@ -36,7 +37,7 @@ def test_diff_json():
 
 
 def test_diff_yml():
-    result = formatter(
+    result = standard_formatter(
         generate_diff(PLAIN_TESTS[3], PLAIN_TESTS[4]))
     assert result == '''{
   - follow: false
@@ -49,7 +50,7 @@ def test_diff_yml():
 
 
 def test_diff_nested_json():
-    result = formatter(
+    result = standard_formatter(
         generate_diff(NESTED_TESTS[1], NESTED_TESTS[2]))
     assert result == '''{
     common: {
@@ -98,7 +99,7 @@ def test_diff_nested_json():
 
 
 def test_diff_nested_yml():
-    result = formatter(
+    result = standard_formatter(
         generate_diff(NESTED_TESTS[3], NESTED_TESTS[4]))
     assert result == '''{
     common: {
@@ -146,10 +147,58 @@ def test_diff_nested_yml():
 }'''
 
 
+def test_plain_frmt_yml():
+    result_def = plain_formatter(
+        generate_diff(PLAIN_TESTS[3], PLAIN_TESTS[4]))
+    result_nested = plain_formatter(
+        generate_diff(NESTED_TESTS[3], NESTED_TESTS[4]))
+    assert result_nested == '''Property 'common.follow' was added with value: false
+Property 'common.setting2' was removed
+Property 'common.setting3' was updated. From true to null
+Property 'common.setting4' was added with value: 'blah blah'
+Property 'common.setting5' was added with value: [complex value]
+Property 'common.setting6.doge.wow' was updated. From '' to 'so much'
+Property 'common.setting6.ops' was added with value: 'vops'
+Property 'group1.baz' was updated. From 'bas' to 'bars'
+Property 'group1.nest' was updated. From [complex value] to 'str'
+Property 'group2' was removed
+Property 'group3' was added with value: [complex value]
+'''
+    assert result_def == '''Property 'follow' was removed
+Property 'proxy' was removed
+Property 'timeout' was updated. From 50 to 20
+Property 'verbose' was added with value: true
+'''
+
+
+def test_plain_frmt_json():
+    result_def = plain_formatter(
+        generate_diff(PLAIN_TESTS[1], PLAIN_TESTS[2]))
+    result_nested = plain_formatter(
+        generate_diff(NESTED_TESTS[1], NESTED_TESTS[2]))
+    assert result_nested == '''Property 'common.follow' was added with value: false
+Property 'common.setting2' was removed
+Property 'common.setting3' was updated. From true to null
+Property 'common.setting4' was added with value: 'blah blah'
+Property 'common.setting5' was added with value: [complex value]
+Property 'common.setting6.doge.wow' was updated. From '' to 'so much'
+Property 'common.setting6.ops' was added with value: 'vops'
+Property 'group1.baz' was updated. From 'bas' to 'bars'
+Property 'group1.nest' was updated. From [complex value] to 'str'
+Property 'group2' was removed
+Property 'group3' was added with value: [complex value]
+'''
+    assert result_def == '''Property 'follow' was removed
+Property 'proxy' was removed
+Property 'timeout' was updated. From 50 to 20
+Property 'verbose' was added with value: true
+'''
+
+
 def test_with_empty_file():
-    result_json = formatter(
+    result_json = standard_formatter(
         generate_diff(PLAIN_TESTS[1], PLAIN_TESTS[5]))
-    result_yml = formatter(
+    result_yml = standard_formatter(
         generate_diff(PLAIN_TESTS[6], PLAIN_TESTS[2]))
     assert result_json == '''{
   - follow: false
@@ -166,9 +215,9 @@ def test_with_empty_file():
 
 
 def test_identical_files():
-    result_json = formatter(
+    result_json = standard_formatter(
         generate_diff(PLAIN_TESTS[1], PLAIN_TESTS[1]))
-    result_yml = formatter(
+    result_yml = standard_formatter(
         generate_diff(PLAIN_TESTS[3], PLAIN_TESTS[3]))
     assert result_json == '''{
     follow: false
@@ -189,5 +238,3 @@ def test_format():
     with pytest.raises(SystemExit) as ex:
         format_opening('./err.txt')
     assert ex.type == SystemExit
-
-print(PLAIN_TESTS[1])
