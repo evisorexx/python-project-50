@@ -18,3 +18,6 @@
 =======
 ### Demonstration of plain formatter:
 [![asciicast](https://asciinema.org/a/RLSS8cztqhacqxf2YABvf3Ydg.svg)](https://asciinema.org/a/RLSS8cztqhacqxf2YABvf3Ydg)
+=======
+### Demostration of JSON formatter:
+[![asciicast](https://asciinema.org/a/ZlIujAm5ioCQk50pFEWqdzzgY.svg)](https://asciinema.org/a/ZlIujAm5ioCQk50pFEWqdzzgY)
