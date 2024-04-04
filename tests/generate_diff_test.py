@@ -2,14 +2,17 @@ from gendiff.generate_diff import generate_diff
 from gendiff.opener import format_opening
 from gendiff.formatters.stylish import standard_formatter
 from gendiff.formatters.plain import plain_formatter
+from gendiff.formatters.json import json_formatter
+import json
+import os, sys
 import pytest
 
 PLAIN_TESTS = [
     'This is list of plain test dicts.',
-    format_opening('./tests/fixtures/test1.json'), #1 JSON
-    format_opening('./tests/fixtures/test2.json'), #2 JSON
-    format_opening('./tests/fixtures/test1.yml'),  #3 YAML
-    format_opening('./tests/fixtures/test2.yml'),  #4 YAML
+    format_opening('./tests/fixtures/default1.json'), #1 JSON
+    format_opening('./tests/fixtures/default2.json'), #2 JSON
+    format_opening('./tests/fixtures/default1.yml'),  #3 YAML
+    format_opening('./tests/fixtures/default2.yml'),  #4 YAML
     format_opening('./tests/fixtures/empty.json'), #5 JSON EMPTY
     format_opening('./tests/fixtures/empty.yml'),  #6 YAML EMPTY
 ]
@@ -193,6 +196,308 @@ Property 'proxy' was removed
 Property 'timeout' was updated. From 50 to 20
 Property 'verbose' was added with value: true
 '''
+
+
+def test_json_frmt_json():
+    result_def = json_formatter(
+        generate_diff(PLAIN_TESTS[1], PLAIN_TESTS[2]))
+    result_nested = json_formatter(
+        generate_diff(NESTED_TESTS[1], NESTED_TESTS[2]))
+    assert result_def == '''[
+    {
+        "name": "follow",
+        "status": "deleted",
+        "what_deleted": false
+    },
+    {
+        "name": "host",
+        "status": "unchanged",
+        "intact": "hexlet.io"
+    },
+    {
+        "name": "proxy",
+        "status": "deleted",
+        "what_deleted": "123.234.53.22"
+    },
+    {
+        "name": "timeout",
+        "status": "changed",
+        "from_first_dict": 50,
+        "from_second_dict": 20
+    },
+    {
+        "name": "verbose",
+        "status": "added",
+        "what_added": true
+    }
+]'''
+    assert result_nested == '''[
+    {
+        "name": "common",
+        "status": "nested",
+        "children": [
+            {
+                "name": "follow",
+                "status": "added",
+                "what_added": false
+            },
+            {
+                "name": "setting1",
+                "status": "unchanged",
+                "intact": "Value 1"
+            },
+            {
+                "name": "setting2",
+                "status": "deleted",
+                "what_deleted": 200
+            },
+            {
+                "name": "setting3",
+                "status": "changed",
+                "from_first_dict": true,
+                "from_second_dict": null
+            },
+            {
+                "name": "setting4",
+                "status": "added",
+                "what_added": "blah blah"
+            },
+            {
+                "name": "setting5",
+                "status": "added",
+                "what_added": {
+                    "key5": "value5"
+                }
+            },
+            {
+                "name": "setting6",
+                "status": "nested",
+                "children": [
+                    {
+                        "name": "doge",
+                        "status": "nested",
+                        "children": [
+                            {
+                                "name": "wow",
+                                "status": "changed",
+                                "from_first_dict": "",
+                                "from_second_dict": "so much"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "key",
+                        "status": "unchanged",
+                        "intact": "value"
+                    },
+                    {
+                        "name": "ops",
+                        "status": "added",
+                        "what_added": "vops"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "group1",
+        "status": "nested",
+        "children": [
+            {
+                "name": "baz",
+                "status": "changed",
+                "from_first_dict": "bas",
+                "from_second_dict": "bars"
+            },
+            {
+                "name": "foo",
+                "status": "unchanged",
+                "intact": "bar"
+            },
+            {
+                "name": "nest",
+                "status": "changed",
+                "from_first_dict": {
+                    "key": "value"
+                },
+                "from_second_dict": "str"
+            }
+        ]
+    },
+    {
+        "name": "group2",
+        "status": "deleted",
+        "what_deleted": {
+            "abc": 12345,
+            "deep": {
+                "id": 45
+            }
+        }
+    },
+    {
+        "name": "group3",
+        "status": "added",
+        "what_added": {
+            "deep": {
+                "id": {
+                    "number": 45
+                }
+            },
+            "fee": 100500
+        }
+    }
+]'''
+
+
+def test_json_frmt_yml():
+    result_def = json_formatter(
+        generate_diff(PLAIN_TESTS[3], PLAIN_TESTS[4]))
+    result_nested = json_formatter(
+        generate_diff(NESTED_TESTS[3], NESTED_TESTS[4]))
+    assert result_def == '''[
+    {
+        "name": "follow",
+        "status": "deleted",
+        "what_deleted": false
+    },
+    {
+        "name": "host",
+        "status": "unchanged",
+        "intact": "hexlet.io"
+    },
+    {
+        "name": "proxy",
+        "status": "deleted",
+        "what_deleted": "123.234.53.22"
+    },
+    {
+        "name": "timeout",
+        "status": "changed",
+        "from_first_dict": 50,
+        "from_second_dict": 20
+    },
+    {
+        "name": "verbose",
+        "status": "added",
+        "what_added": true
+    }
+]'''
+    assert result_nested == '''[
+    {
+        "name": "common",
+        "status": "nested",
+        "children": [
+            {
+                "name": "follow",
+                "status": "added",
+                "what_added": false
+            },
+            {
+                "name": "setting1",
+                "status": "unchanged",
+                "intact": "Value 1"
+            },
+            {
+                "name": "setting2",
+                "status": "deleted",
+                "what_deleted": 200
+            },
+            {
+                "name": "setting3",
+                "status": "changed",
+                "from_first_dict": true,
+                "from_second_dict": null
+            },
+            {
+                "name": "setting4",
+                "status": "added",
+                "what_added": "blah blah"
+            },
+            {
+                "name": "setting5",
+                "status": "added",
+                "what_added": {
+                    "key5": "value5"
+                }
+            },
+            {
+                "name": "setting6",
+                "status": "nested",
+                "children": [
+                    {
+                        "name": "doge",
+                        "status": "nested",
+                        "children": [
+                            {
+                                "name": "wow",
+                                "status": "changed",
+                                "from_first_dict": "",
+                                "from_second_dict": "so much"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "key",
+                        "status": "unchanged",
+                        "intact": "value"
+                    },
+                    {
+                        "name": "ops",
+                        "status": "added",
+                        "what_added": "vops"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "group1",
+        "status": "nested",
+        "children": [
+            {
+                "name": "baz",
+                "status": "changed",
+                "from_first_dict": "bas",
+                "from_second_dict": "bars"
+            },
+            {
+                "name": "foo",
+                "status": "unchanged",
+                "intact": "bar"
+            },
+            {
+                "name": "nest",
+                "status": "changed",
+                "from_first_dict": {
+                    "key": "value"
+                },
+                "from_second_dict": "str"
+            }
+        ]
+    },
+    {
+        "name": "group2",
+        "status": "deleted",
+        "what_deleted": {
+            "abc": 12345,
+            "deep": {
+                "id": 45
+            }
+        }
+    },
+    {
+        "name": "group3",
+        "status": "added",
+        "what_added": {
+            "deep": {
+                "id": {
+                    "number": 45
+                }
+            },
+            "fee": 100500
+        }
+    }
+]'''
 
 
 def test_with_empty_file():

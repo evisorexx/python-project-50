@@ -1,0 +1,116 @@
+[
+    {
+        "name": "common",
+        "status": "nested",
+        "children": [
+            {
+                "name": "follow",
+                "status": "added",
+                "what_added": false
+            },
+            {
+                "name": "setting1",
+                "status": "unchanged",
+                "intact": "Value 1"
+            },
+            {
+                "name": "setting2",
+                "status": "deleted",
+                "what_deleted": 200
+            },
+            {
+                "name": "setting3",
+                "status": "changed",
+                "from_first_dict": true,
+                "from_second_dict": null
+            },
+            {
+                "name": "setting4",
+                "status": "added",
+                "what_added": "blah blah"
+            },
+            {
+                "name": "setting5",
+                "status": "added",
+                "what_added": {
+                    "key5": "value5"
+                }
+            },
+            {
+                "name": "setting6",
+                "status": "nested",
+                "children": [
+                    {
+                        "name": "doge",
+                        "status": "nested",
+                        "children": [
+                            {
+                                "name": "wow",
+                                "status": "changed",
+                                "from_first_dict": "",
+                                "from_second_dict": "so much"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "key",
+                        "status": "unchanged",
+                        "intact": "value"
+                    },
+                    {
+                        "name": "ops",
+                        "status": "added",
+                        "what_added": "vops"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "group1",
+        "status": "nested",
+        "children": [
+            {
+                "name": "baz",
+                "status": "changed",
+                "from_first_dict": "bas",
+                "from_second_dict": "bars"
+            },
+            {
+                "name": "foo",
+                "status": "unchanged",
+                "intact": "bar"
+            },
+            {
+                "name": "nest",
+                "status": "changed",
+                "from_first_dict": {
+                    "key": "value"
+                },
+                "from_second_dict": "str"
+            }
+        ]
+    },
+    {
+        "name": "group2",
+        "status": "deleted",
+        "what_deleted": {
+            "abc": 12345,
+            "deep": {
+                "id": 45
+            }
+        }
+    },
+    {
+        "name": "group3",
+        "status": "added",
+        "what_added": {
+            "deep": {
+                "id": {
+                    "number": 45
+                }
+            },
+            "fee": 100500
+        }
+    }
+]

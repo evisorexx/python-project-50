@@ -4,6 +4,7 @@ from gendiff.generate_diff import generate_diff
 from gendiff.opener import format_opening
 from gendiff.formatters.stylish import standard_formatter
 from gendiff.formatters.plain import plain_formatter
+from gendiff.formatters.json import json_formatter
 
 
 def main():
@@ -19,6 +20,8 @@ def main():
     data2 = format_opening(args.second_file)
     if args.format == 'plain':
         print(plain_formatter(generate_diff(data1, data2)))
+    elif args.format == 'json':
+        print(json_formatter(generate_diff(data1, data2)))
     elif args.format == 'stylish':
         print(standard_formatter(generate_diff(data1, data2)))
     else:
