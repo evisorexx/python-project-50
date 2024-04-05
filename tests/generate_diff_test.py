@@ -1,34 +1,29 @@
 from gendiff.generate_diff import generate_diff
-from gendiff.opener import format_opening
-from gendiff.formatters.stylish import standard_formatter
-from gendiff.formatters.plain import plain_formatter
-from gendiff.formatters.json import json_formatter
-import json
-import os, sys
+from gendiff.file_opener import format_opening
 import pytest
 
 PLAIN_TESTS = [
     'This is list of plain test dicts.',
-    format_opening('./tests/fixtures/default1.json'), #1 JSON
-    format_opening('./tests/fixtures/default2.json'), #2 JSON
-    format_opening('./tests/fixtures/default1.yml'),  #3 YAML
-    format_opening('./tests/fixtures/default2.yml'),  #4 YAML
-    format_opening('./tests/fixtures/empty.json'), #5 JSON EMPTY
-    format_opening('./tests/fixtures/empty.yml'),  #6 YAML EMPTY
+    './tests/fixtures/default1.json', #1 JSON
+    './tests/fixtures/default2.json', #2 JSON
+    './tests/fixtures/default1.yml',  #3 YAML
+    './tests/fixtures/default2.yml',  #4 YAML
+    './tests/fixtures/empty.json', #5 JSON EMPTY
+    './tests/fixtures/empty.yml',  #6 YAML EMPTY
 ]
 
 NESTED_TESTS = [
     'This is list of nested test dicts.',
-    format_opening('./tests/fixtures/nested1.json'), #1 JSON
-    format_opening('./tests/fixtures/nested2.json'), #2 JSON
-    format_opening('./tests/fixtures/nested1.yml'),  #3 YAML
-    format_opening('./tests/fixtures/nested2.yml'),  #4 YAML
+    './tests/fixtures/nested1.json', #1 JSON
+    './tests/fixtures/nested2.json', #2 JSON
+    './tests/fixtures/nested1.yml',  #3 YAML
+    './tests/fixtures/nested2.yml',  #4 YAML
 ]
 
 
 def test_diff_json():
-    result = standard_formatter(
-        generate_diff(PLAIN_TESTS[1], PLAIN_TESTS[2]))
+    result = generate_diff(PLAIN_TESTS[1],
+                            PLAIN_TESTS[2], 'stylish')
     assert result == '''{
   - follow: false
     host: hexlet.io
@@ -40,8 +35,8 @@ def test_diff_json():
 
 
 def test_diff_yml():
-    result = standard_formatter(
-        generate_diff(PLAIN_TESTS[3], PLAIN_TESTS[4]))
+    result = generate_diff(PLAIN_TESTS[3],
+                            PLAIN_TESTS[4], 'stylish')
     assert result == '''{
   - follow: false
     host: hexlet.io
@@ -53,8 +48,8 @@ def test_diff_yml():
 
 
 def test_diff_nested_json():
-    result = standard_formatter(
-        generate_diff(NESTED_TESTS[1], NESTED_TESTS[2]))
+    result = generate_diff(NESTED_TESTS[1],
+                            NESTED_TESTS[2], 'stylish')
     assert result == '''{
     common: {
       + follow: false
@@ -102,8 +97,8 @@ def test_diff_nested_json():
 
 
 def test_diff_nested_yml():
-    result = standard_formatter(
-        generate_diff(NESTED_TESTS[3], NESTED_TESTS[4]))
+    result = generate_diff(NESTED_TESTS[3],
+                            NESTED_TESTS[4], 'stylish')
     assert result == '''{
     common: {
       + follow: false
@@ -151,10 +146,10 @@ def test_diff_nested_yml():
 
 
 def test_plain_frmt_yml():
-    result_def = plain_formatter(
-        generate_diff(PLAIN_TESTS[3], PLAIN_TESTS[4]))
-    result_nested = plain_formatter(
-        generate_diff(NESTED_TESTS[3], NESTED_TESTS[4]))
+    result_def = generate_diff(PLAIN_TESTS[3],
+                               PLAIN_TESTS[4], 'plain')
+    result_nested = generate_diff(NESTED_TESTS[3],
+                                   NESTED_TESTS[4], 'plain')
     assert result_nested == '''Property 'common.follow' was added with value: false
 Property 'common.setting2' was removed
 Property 'common.setting3' was updated. From true to null
@@ -175,10 +170,10 @@ Property 'verbose' was added with value: true
 
 
 def test_plain_frmt_json():
-    result_def = plain_formatter(
-        generate_diff(PLAIN_TESTS[1], PLAIN_TESTS[2]))
-    result_nested = plain_formatter(
-        generate_diff(NESTED_TESTS[1], NESTED_TESTS[2]))
+    result_def = generate_diff(PLAIN_TESTS[1],
+                                PLAIN_TESTS[2], 'plain')
+    result_nested = generate_diff(NESTED_TESTS[1],
+                                   NESTED_TESTS[2], 'plain')
     assert result_nested == '''Property 'common.follow' was added with value: false
 Property 'common.setting2' was removed
 Property 'common.setting3' was updated. From true to null
@@ -199,10 +194,10 @@ Property 'verbose' was added with value: true
 
 
 def test_json_frmt_json():
-    result_def = json_formatter(
-        generate_diff(PLAIN_TESTS[1], PLAIN_TESTS[2]))
-    result_nested = json_formatter(
-        generate_diff(NESTED_TESTS[1], NESTED_TESTS[2]))
+    result_def = generate_diff(PLAIN_TESTS[1],
+                                PLAIN_TESTS[2], 'json')
+    result_nested = generate_diff(NESTED_TESTS[1],
+                                   NESTED_TESTS[2], 'json')
     assert result_def == '''[
     {
         "name": "follow",
@@ -350,10 +345,10 @@ def test_json_frmt_json():
 
 
 def test_json_frmt_yml():
-    result_def = json_formatter(
-        generate_diff(PLAIN_TESTS[3], PLAIN_TESTS[4]))
-    result_nested = json_formatter(
-        generate_diff(NESTED_TESTS[3], NESTED_TESTS[4]))
+    result_def = generate_diff(PLAIN_TESTS[3],
+                                PLAIN_TESTS[4], 'json')
+    result_nested = generate_diff(NESTED_TESTS[3],
+                                   NESTED_TESTS[4], 'json')
     assert result_def == '''[
     {
         "name": "follow",
@@ -501,10 +496,10 @@ def test_json_frmt_yml():
 
 
 def test_with_empty_file():
-    result_json = standard_formatter(
-        generate_diff(PLAIN_TESTS[1], PLAIN_TESTS[5]))
-    result_yml = standard_formatter(
-        generate_diff(PLAIN_TESTS[6], PLAIN_TESTS[2]))
+    result_json = generate_diff(PLAIN_TESTS[1],
+                       PLAIN_TESTS[5], 'stylish')
+    result_yml = generate_diff(PLAIN_TESTS[6],
+                       PLAIN_TESTS[2], 'stylish')
     assert result_json == '''{
   - follow: false
   - host: hexlet.io
@@ -520,10 +515,10 @@ def test_with_empty_file():
 
 
 def test_identical_files():
-    result_json = standard_formatter(
-        generate_diff(PLAIN_TESTS[1], PLAIN_TESTS[1]))
-    result_yml = standard_formatter(
-        generate_diff(PLAIN_TESTS[3], PLAIN_TESTS[3]))
+    result_json = generate_diff(PLAIN_TESTS[1],
+                                 PLAIN_TESTS[1], 'stylish')
+    result_yml = generate_diff(PLAIN_TESTS[3],
+                                PLAIN_TESTS[3], 'stylish')
     assert result_json == '''{
     follow: false
     host: hexlet.io
@@ -537,6 +532,12 @@ def test_identical_files():
     proxy: 123.234.53.22
     timeout: 50
 }'''
+
+
+def test_unexisting_format():
+    result = generate_diff(PLAIN_TESTS[1],
+                                 PLAIN_TESTS[1], 'nonsense')
+    assert result == 'Unknown formatter!'
 
 
 def test_format():

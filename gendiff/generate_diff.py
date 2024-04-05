@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
+from gendiff.formatters.stylish import standard_formatter
+from gendiff.formatters.plain import plain_formatter
+from gendiff.formatters.json import json_formatter
+from gendiff.file_opener import format_opening
 
 
-def generate_diff(file1, file2):
+def diff_tree(file1, file2):
     result = []
     keys1, keys2 = file1.keys(), file2.keys()
     all_keys = keys1 | keys2
@@ -33,7 +37,7 @@ def generate_diff(file1, file2):
             step_result = {
                 'name': key,
                 'status': 'nested',
-                'children': generate_diff(
+                'children': diff_tree(
                     file1.get(key), file2.get(key))
             }
             result.append(step_result)
@@ -47,3 +51,17 @@ def generate_diff(file1, file2):
             result.append(step_result)
     diff = sorted(result, key=lambda x: x['name'])
     return diff
+
+
+def generate_diff(path1, path2, format):
+    file1 = format_opening(path1)
+    file2 = format_opening(path2)
+    diff = diff_tree(file1, file2)
+    if format == 'stylish':
+        return standard_formatter(diff)
+    elif format == 'plain':
+        return plain_formatter(diff)
+    elif format == 'json':
+        return json_formatter(diff)
+    else:
+        return 'Unknown formatter!'
