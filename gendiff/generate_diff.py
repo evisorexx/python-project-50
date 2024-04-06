@@ -60,7 +60,7 @@ def generate_diff(path1, path2, format='stylish'):
     if format == 'stylish':
         return standard_formatter(diff)
     elif format == 'plain':
-        return plain_formatter(diff)
+        return plain_formatter(diff).rstrip()
     elif format == 'json':
         return json_formatter(diff)
     else:
