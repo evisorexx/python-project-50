@@ -53,7 +53,7 @@ def diff_tree(file1, file2):
     return diff
 
 
-def generate_diff(path1, path2, format):
+def generate_diff(path1, path2, format='stylish'):
     file1 = format_opening(path1)
     file2 = format_opening(path2)
     diff = diff_tree(file1, file2)
