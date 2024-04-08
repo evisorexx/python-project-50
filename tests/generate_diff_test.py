@@ -1,5 +1,5 @@
 from gendiff.generate_diff import generate_diff
-from gendiff.file_opener import format_opening
+from gendiff.file_opener import file_opening
 import pytest
 
 PLAIN_TESTS = [
@@ -140,5 +140,5 @@ def test_unexisting_format():
 
 def test_unexisting_file():
     with pytest.raises(SystemExit) as ex:
-        format_opening('./err.txt')
+        file_opening('./err.txt')
     assert ex.type == SystemExit
