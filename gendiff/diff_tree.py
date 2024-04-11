@@ -1,4 +1,4 @@
-def generate(file1, file2):
+def generate_diff_tree(file1, file2):
     result = []
     keys1, keys2 = file1.keys(), file2.keys()
     all_keys = keys1 | keys2
@@ -30,7 +30,7 @@ def generate(file1, file2):
             step_result = {
                 'name': key,
                 'status': 'nested',
-                'children': generate(
+                'children': generate_diff_tree(
                     file1.get(key), file2.get(key))
             }
             result.append(step_result)

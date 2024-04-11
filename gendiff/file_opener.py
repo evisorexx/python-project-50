@@ -6,12 +6,11 @@ import sys
 
 def check_file_format(path):
     if path.endswith('.yml') or path.endswith('.yaml'):
-        return yaml.load(open(path, 'r'), Loader=yaml.SafeLoader)
+        return 'YAML'
     elif path.endswith('.json'):
-        return json.load(open(path, 'r'))
+        return 'JSON'
     else:
-        print('Unknown format of file!')
-        sys.exit(0)
+        return 'UNKNOWN'
 
 
 def file_opening(path):
@@ -22,5 +21,11 @@ def file_opening(path):
         sys.exit()
     if os.stat(path).st_size == 0:
         return {}
-    else:
-        return check_file_format(path)
+    match check_file_format(path):
+        case 'JSON':
+            return json.load(open(path, 'r'))
+        case 'YAML':
+            return yaml.load(open(path, 'r'), Loader=yaml.SafeLoader)
+        case 'UNKNOWN':
+            print('Unknown format of file!')
+            sys.exit(0)

@@ -20,116 +20,36 @@ NESTED_TESTS = [
     './tests/fixtures/nested2.yml',  # 4 YAML
 ]
 
-
-def test_diff_json():
-    result = generate_diff(PLAIN_TESTS[1],
-                           PLAIN_TESTS[2], 'stylish')
-    assert result == open(
-        './tests/fixtures/default_result.txt', 'r').read()
-
-
-def test_diff_yml():
-    result = generate_diff(PLAIN_TESTS[3],
-                           PLAIN_TESTS[4], 'stylish')
-    assert result == open(
-        './tests/fixtures/default_result.txt', 'r').read()
+RESULTS = [
+    'This is list of correct results for generate_diff function.',
+    './tests/fixtures/results/default_result.txt',       # 1
+    './tests/fixtures/results/nested_result.txt',        # 2
+    './tests/fixtures/results/for_plain_formatter.txt',  # 3
+    './tests/fixtures/results/for_json_formatter.txt',   # 4
+    './tests/fixtures/results/empty_json.txt',           # 5
+    './tests/fixtures/results/empty_yaml.txt',           # 6
+    './tests/fixtures/results/identical.txt',            # 7
+]
 
 
-def test_diff_nested_json():
-    result = generate_diff(NESTED_TESTS[1],
-                           NESTED_TESTS[2], 'stylish')
-    assert result == open(
-        './tests/fixtures/nested_result.txt', 'r').read()
-
-
-def test_diff_nested_yml():
-    result = generate_diff(NESTED_TESTS[3],
-                           NESTED_TESTS[4], 'stylish')
-    assert result == open(
-        './tests/fixtures/nested_result.txt', 'r').read()
-
-
-def test_plain_frmt_yml():
-    result_def = generate_diff(PLAIN_TESTS[3],
-                               PLAIN_TESTS[4], 'plain')
-    result_nested = generate_diff(NESTED_TESTS[3],
-                                  NESTED_TESTS[4], 'plain')
-    assert result_nested == open(
-        './tests/fixtures/for_plain_formatter_nest.txt', 'r').read()
-    assert result_def == open(
-        './tests/fixtures/for_plain_formatter_def.txt', 'r').read()
-
-
-def test_plain_frmt_json():
-    result_def = generate_diff(PLAIN_TESTS[1],
-                               PLAIN_TESTS[2], 'plain')
-    result_nested = generate_diff(NESTED_TESTS[1],
-                                  NESTED_TESTS[2], 'plain')
-    assert result_nested == open(
-        './tests/fixtures/for_plain_formatter_nest.txt', 'r').read()
-    assert result_def == open(
-        './tests/fixtures/for_plain_formatter_def.txt', 'r').read()
-
-
-def test_json_frmt_json():
-    result_def = generate_diff(PLAIN_TESTS[1],
-                               PLAIN_TESTS[2], 'json')
-    result_nested = generate_diff(NESTED_TESTS[1],
-                                  NESTED_TESTS[2], 'json')
-    assert result_def == open(
-        './tests/fixtures/for_json_formatter_def.txt', 'r').read()
-    assert result_nested == open(
-        './tests/fixtures/for_json_formatter_nest.txt', 'r').read()
-
-
-def test_json_frmt_yml():
-    result_def = generate_diff(PLAIN_TESTS[3],
-                               PLAIN_TESTS[4], 'json')
-    result_nested = generate_diff(NESTED_TESTS[3],
-                                  NESTED_TESTS[4], 'json')
-    assert result_def == open(
-        './tests/fixtures/for_json_formatter_def.txt', 'r').read()
-    assert result_nested == open(
-        './tests/fixtures/for_json_formatter_nest.txt', 'r').read()
-
-
-def test_with_empty_file():
-    result_json = generate_diff(PLAIN_TESTS[1],
-                                PLAIN_TESTS[5], 'stylish')
-    result_yml = generate_diff(PLAIN_TESTS[6],
-                               PLAIN_TESTS[2], 'stylish')
-    assert result_json == '''{
-  - follow: false
-  - host: hexlet.io
-  - proxy: 123.234.53.22
-  - timeout: 50
-}'''
-
-    assert result_yml == '''{
-  + host: hexlet.io
-  + timeout: 20
-  + verbose: true
-}'''
-
-
-def test_identical_files():
-    result_json = generate_diff(PLAIN_TESTS[1],
-                                PLAIN_TESTS[1], 'stylish')
-    result_yml = generate_diff(PLAIN_TESTS[3],
-                               PLAIN_TESTS[3], 'stylish')
-    assert result_json == '''{
-    follow: false
-    host: hexlet.io
-    proxy: 123.234.53.22
-    timeout: 50
-}'''
-
-    assert result_yml == '''{
-    follow: false
-    host: hexlet.io
-    proxy: 123.234.53.22
-    timeout: 50
-}'''
+@pytest.mark.parametrize('name1, name2, formatter, exp_res', [
+    (PLAIN_TESTS[1], PLAIN_TESTS[2], 'stylish', RESULTS[1]),    # DEF JSON
+    (PLAIN_TESTS[3], PLAIN_TESTS[4], 'stylish', RESULTS[1]),    # DEF YAML
+    (NESTED_TESTS[1], NESTED_TESTS[2], 'stylish', RESULTS[2]),  # NEST JSON
+    (NESTED_TESTS[3], NESTED_TESTS[4], 'stylish', RESULTS[2]),  # NEST YAML
+    (NESTED_TESTS[1], NESTED_TESTS[2], 'plain', RESULTS[3]),    # PLAIN JSON
+    (NESTED_TESTS[3], NESTED_TESTS[4], 'plain', RESULTS[3]),    # PLAIN YAML
+    (NESTED_TESTS[1], NESTED_TESTS[2], 'json', RESULTS[4]),     # JSON JSON
+    (NESTED_TESTS[3], NESTED_TESTS[4], 'json', RESULTS[4]),     # JSON YAML
+    (PLAIN_TESTS[1], PLAIN_TESTS[5], 'stylish', RESULTS[5]),    # EMPTY JSON
+    (PLAIN_TESTS[6], PLAIN_TESTS[2], 'stylish', RESULTS[6]),    # EMPTY YAML
+    (PLAIN_TESTS[1], PLAIN_TESTS[1], 'stylish', RESULTS[7]),    # IDENTICAL JSON
+    (PLAIN_TESTS[1], PLAIN_TESTS[1], 'stylish', RESULTS[7])     # IDENTICAL YAML
+])
+def test_generate_diff(name1, name2, formatter, exp_res):
+    result = generate_diff(name1, name2, formatter)
+    expected = open(exp_res, 'r').read()
+    assert result == expected
 
 
 def test_unexisting_format():
