@@ -1,6 +1,6 @@
 # Diffence Generator Project by Andrey Makarov
 
-**Difference Generator** - утилита, позволяющая сравнить два файла формата JSON или YAML. Для работы с ним необходимо установить пакет с утилитой из PyPI, используя терминал любого Linux-дистрибутива. Далее используйте команду gendiff -h для ознакомления с правильным синтаксисом использования программы.
+**Difference Generator** - утилита, позволяющая сравнить два файла формата JSON или YAML, с последующим выводом списка отличий в терминал. Для работы с ним необходимо установить пакет с утилитой из PyPI, используя терминал любого Linux-дистрибутива. Далее используйте команду gendiff -h для ознакомления с правильным синтаксисом использования программы.
 
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/evisorexx/python-project-50/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/evisorexx/python-project-50/actions)
